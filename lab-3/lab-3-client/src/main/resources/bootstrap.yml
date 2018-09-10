@@ -6,5 +6,6 @@ spring:
   cloud:
     config:
       uri: http://localhost:8001
+      failFast: true
 server:
   port: 8002
