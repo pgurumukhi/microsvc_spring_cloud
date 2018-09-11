@@ -16,26 +16,35 @@ import java.util.List;
 public class Controller {
 
     @Autowired
-    DiscoveryClient client;
+    RestTemplate template;
+    //DiscoveryClient client;
 
     @GetMapping("/sentence")
     public @ResponseBody String getSentence(){
         return
-            getWord("LAB-4-SUBJECT") + " "
-            + getWord("LAB-4-VERB") + " "
-            + getWord("LAB-4-ARTICLE") + " "
-            + getWord("LAB-4-ADJECTIVE") + " "
-            + getWord("LAB-4-NOUN") + "."
+            getWord("SUBJECT") + " "
+            + getWord("VERB") + " "
+            + getWord("ARTICLE") + " "
+            + getWord("ADJECTIVE") + " "
+            + getWord("NOUN") + "."
             ;
     }
 
     public String getWord(String service){
+
+        //When using DiscoveryClient
+        /*
         List<ServiceInstance> list = client.getInstances(service);
         if ( list!=null && list.size()>0 ){
             URI uri = list.get(0).getUri();
             if (uri != null){
-                return (new RestTemplate()).getForObject(uri,String.class);
+                return (new RestTemplate()).getForObject(uri, String.class);
             }
+        }
+        */
+        //When using Ribbon
+        if (template.getForObject("http://"+service, String.class) != null ) {
+            return template.getForObject("http://" + service, String.class);
         }
         return null;
     }
